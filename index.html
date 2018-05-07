@@ -1,0 +1,187 @@
+<!DOCTYPE html> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>exam</title>
+  <script src="phaser.min.js"></script>
+</head>
+<body>
+
+<script>
+// Example by https://twitter.com/awapblog
+// Updated by https://twitter.com/boldbigflank
+
+var game = new Phaser.Game(328,380, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create });
+
+var GEM_SIZE = 64;
+var GEM_SPACING = 2;
+var GEM_SIZE_SPACED = GEM_SIZE + GEM_SPACING;
+var BOARD_COLS;
+var BOARD_ROWS;
+var MATCH_MIN = 3; // min number of same color gems required in a row to be considered a match
+
+var gems;
+var selectedGem = null;
+var selectedGemStartPos;
+var selectedGemTween;
+var tempShiftedGem = null;
+var allowInput;
+
+function preload() { 
+
+    game.load.spritesheet("GEMS", "assets/digital.png", GEM_SIZE, GEM_SIZE);
+}
+
+
+function create() {
+    spawnBoard();
+}
+
+
+// fill the screen with as many gems as possible
+function spawnBoard() {
+    BOARD_COLS = 5
+    BOARD_ROWS = 5
+    gems = game.add.group();
+
+    for (var i = 0; i < BOARD_COLS; i++)
+    {
+        for (var j = 0; j < BOARD_ROWS; j++)
+        {
+            var gem = gems.create(i * GEM_SIZE_SPACED, j * GEM_SIZE_SPACED, "GEMS");
+            gem.name = 'gem' + i.toString() + 'x' + j.toString();
+            allowInput = true;
+            randomizeGemColor(gem);
+            setGemPos(gem, i, j); // each gem has a position on the board
+            gem.kill();
+        }
+    }
+    removeKilledGems();
+    var dropGemDuration = dropGems();
+    // delay board refilling until all existing gems have dropped down
+    game.time.events.add(dropGemDuration * 100, refillBoard);
+    allowInput = false;
+    // refillBoard();
+}
+
+// select a gem and remember its starting position
+
+
+// find a gem on the board according to its position on the board
+function getGem(posX, posY) {
+
+    return gems.iterate("id", calcGemId(posX, posY), Phaser.Group.RETURN_CHILD);
+
+}
+function setGemPos(gem, posX, posY) {
+
+    gem.posX = posX;
+    gem.posY = posY;
+    gem.id = calcGemId(posX, posY);
+
+}
+
+function calcGemId(posX, posY) {
+
+    return posX + posY * BOARD_COLS;
+
+}
+//隨機生成0-9
+function randomizeGemColor(gem) {
+
+    gem.frame = game.rnd.integerInRange(0, gem.animations.frameTotal - 1);
+
+}
+
+// swap the position of 2 gems when the player drags the selected gem into a new location
+
+function removeKilledGems() {
+
+    gems.forEach(function(gem) {
+        if (!gem.alive) {
+            setGemPos(gem, -1,-1);
+        }
+    });
+
+}
+
+// animated gem movement
+function tweenGemPos(gem, newPosX, newPosY, durationMultiplier) {
+
+    console.log('Tween ',gem.name,' from ',gem.posX, ',', gem.posY, ' to ', newPosX, ',', newPosY);
+    if (durationMultiplier === null || typeof durationMultiplier === 'undefined')
+    {
+        durationMultiplier = 1;
+    }
+
+    return game.add.tween(gem).to({x: newPosX  * GEM_SIZE_SPACED, y: newPosY * GEM_SIZE_SPACED}, 100 * durationMultiplier, Phaser.Easing.Linear.None, true);
+
+}
+
+// look for gems with empty space beneath them and move them down
+function dropGems() {
+
+    var dropRowCountMax = 0;
+
+    for (var i = 0; i < BOARD_COLS; i++)
+    {
+        var dropRowCount = 0;
+
+        for (var j = BOARD_ROWS - 1; j >= 0; j--)
+        {
+            var gem = getGem(i, j);
+
+            if (gem === null)
+            {
+                dropRowCount++;
+            }
+            else if (dropRowCount > 0)
+            {
+                gem.dirty = true;
+                setGemPos(gem, gem.posX, gem.posY + dropRowCount);
+                tweenGemPos(gem, gem.posX, gem.posY, dropRowCount);
+            }
+        }
+
+        dropRowCountMax = Math.max(dropRowCount, dropRowCountMax);
+    }
+
+    return dropRowCountMax;
+
+}
+
+// look for any empty spots on the board and spawn new gems in their place that fall down from above
+function refillBoard() {
+
+    var maxGemsMissingFromCol = 0;
+
+    for (var i = 0; i < BOARD_COLS; i++)
+    {
+        var gemsMissingFromCol = 0;
+
+        for (var j = BOARD_ROWS - 1; j >= 0; j--)
+        {
+            var gem = getGem(i, j);
+
+            if (gem === null)
+            {
+                gemsMissingFromCol++;
+                gem = gems.getFirstDead();
+                gem.reset(i * GEM_SIZE_SPACED, -gemsMissingFromCol * GEM_SIZE_SPACED);
+                gem.dirty = true;
+                randomizeGemColor(gem);
+                setGemPos(gem, i, j);
+                tweenGemPos(gem, gem.posX, gem.posY, gemsMissingFromCol * 2);
+            }
+        }
+
+        maxGemsMissingFromCol = Math.max(maxGemsMissingFromCol, gemsMissingFromCol);
+    }
+
+
+}
+
+// when the board has finished refilling, re-enable player input
+
+</script>
+
+</body>
