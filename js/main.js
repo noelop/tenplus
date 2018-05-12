@@ -1,13 +1,4 @@
-<!DOCTYPE html> 
-<head> 
-    <meta charset="UTF-8" />
-    <title>exam</title>
-  <script src="phaser.min.js"></script>
-</head>
-<body>
-
-<script>
-var game = new Phaser.Game(320, 350, Phaser.CANVAS, 'phaser-example', { preload: preload, 
+var game = new Phaser.Game(320, 350, Phaser.CANVAS, 'phaser-example', { preload: preload,
     create: create });
 var SIZE = 64;
 var digitals;
@@ -23,7 +14,7 @@ function preload() {
 
     game.load.spritesheet("digital_img", "assets/digital.png", SIZE, SIZE);
     game.load.spritesheet("digital_img_2", "assets/digital_2.png", SIZE, SIZE);
-    
+
 }
 
 function create() {
@@ -31,7 +22,7 @@ function create() {
     game.input.addMoveCallback(slideDIGI, this);
     scoreText = game.add.text(30, 325, '++', { font: "20px Arial", fill: "#ffffff", align: "left" });
 
-} 
+}
 function setDigiPos(digi, posX, posY) {
     digi.posX = posX;spawnBoard
     digi.posY = posY;
@@ -237,7 +228,7 @@ function releaseDIGI(){
 function selectDIGI(digital){
 	console.log(allowInput);
     if (allowInput)
-    {  
+    {
         stepCount=1;
         selectedDIGI = digital;
         scoreText.text='123';
@@ -257,5 +248,3 @@ function checkIfDigiCanBeMovedHere(toPosX, toPosY) {
     }
     return true;
 }
-</script>
-</body>
