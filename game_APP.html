@@ -29,7 +29,7 @@ function preload() {
 function create() {
     spawnBoard();
     game.input.addMoveCallback(slideDIGI, this);
-    scoreText = game.add.text(30, 330, '++', { font: "20px Arial", fill: "#ffffff", align: "left" });
+    scoreText = game.add.text(30, 325, '++', { font: "20px Arial", fill: "#ffffff", align: "left" });
 
 } 
 function setDigiPos(digi, posX, posY) {
@@ -56,7 +56,7 @@ function DuplicatePath(x,y){
         }
     }
     else{
-        no1digi=gatDigi(x,y);
+        no1digi=getDigi(x,y);
         scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
         stepCount=2;
         return ;
@@ -67,7 +67,8 @@ function DuplicatePath(x,y){
         }
     }
     else{
-        no2digi=gatDigi(x,y);
+        no2digi=getDigi(x,y);
+        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
         stepCount=3;
         return ;
     }
@@ -77,7 +78,8 @@ function DuplicatePath(x,y){
         }
     }
     else{
-        no3digi=gatDigi(x,y);
+        no3digi=getDigi(x,y);
+        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
         stepCount=4;
         return ;
     }
@@ -87,7 +89,8 @@ function DuplicatePath(x,y){
         }
     }
     else{
-        no4digi=gatDigi(x,y);
+        no4digi=getDigi(x,y);
+        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'+'+getDigiColor(no4digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi));
         stepCount=5;
         return ;
     }
@@ -161,10 +164,6 @@ function spawnBoard(){
     var dropDigiDuration = dropDigis();
     game.time.events.add(dropDigiDuration * 100, refillBoard);
     selectedGem = null;
-    no1digi=null;
-    no2digi=null;
-    no3digi=null;
-    no4digi=null;
 }
 function refillBoard() {
 	allowInput = false;
@@ -195,9 +194,14 @@ function randomizeGemColor(digi) {
     digi.frame = game.rnd.integerInRange(0, digi.animations.frameTotal - 1);
 }
 function KillDigital(){
-
+    if ((getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi))%10===0) {
+        scoreText.text='yes'
+    }
 }
 function getDigiColor(digi){
+    if (digi ===null){
+        return 0;
+    }
 	return digi.frame;
 }
 function releaseDIGI(){
@@ -206,6 +210,10 @@ function releaseDIGI(){
         return;
     }
     var canKill = KillDigital();
+    no1digi=null;
+    no2digi=null;
+    no3digi=null;
+    no4digi=null;
 }
 function selectDIGI(digital){
 	console.log(allowInput);
