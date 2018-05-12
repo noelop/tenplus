@@ -154,7 +154,6 @@ function spawnBoard(){
             var digital=digitals.create(i*SIZE,j*SIZE,"digital_img");
             digital.name = 'digi'+i.toString()+'x'+j.toString();
             digital.inputEnabled = true;
-            console.log(allowInput);
             digital.events.onInputDown.add(selectDIGI, this);
             digital.events.onInputUp.add(releaseDIGI,this);
             randomizeGemColor(digital);
@@ -195,7 +194,21 @@ function randomizeGemColor(digi) {
 }
 function KillDigital(){
     if ((getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi))%10===0) {
-        scoreText.text='yes'
+        selectedDIGI.kill();
+        no1digi.kill();
+        no2digi.kill();
+        selectedDIGI=null;
+        no1digi=null;
+        no2digi=null;
+        if (no3digi !==null){
+            no3digi.kill();
+            no3digi=null;
+        }
+        if (no4digi !== null) {
+            no4digi.kill();
+            no4digi=null;
+        }
+
     }
 }
 function getDigiColor(digi){
@@ -209,11 +222,17 @@ function releaseDIGI(){
         selectedDIGI=null;
         return;
     }
-    var canKill = KillDigital();
+    KillDigital();
     no1digi=null;
     no2digi=null;
     no3digi=null;
     no4digi=null;
+    var dropGemDuration = dropDigis();
+
+    // delay board refilling until all existing gems have dropped down
+    game.time.events.add(dropGemDuration * 100, refillBoard);
+
+    allowInput = false;
 }
 function selectDIGI(digital){
 	console.log(allowInput);
