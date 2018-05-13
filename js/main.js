@@ -76,8 +76,11 @@ function setDigiPos(digi, posX, posY) {
 }
 
 function getDIGIPos(x){
-
+	b = x / SIZE_SPACED;
     a = Math.floor(x / SIZE_SPACED);
+    if ((b-a)>0.8){
+    	a=null
+    }
     // if(x - SIZE_SPACED*(a-1) > SIZE){
     //     a = null
     // }
@@ -150,8 +153,14 @@ function slideDIGI(pointer, x, y){
 
          var cursorDigiPosX = getDIGIPos((x-DigiXAlter)/DigiXScale);
          var cursorDigiPosY = getDIGIPos((y-DigiYAlter)/DigiYScale);
+         if (cursorDigiPosX===null ||cursorDigiPosY===null){
+         	cursorDigiPosX=null;
+         	cursorDigiPosY=null;
+         	return;
+         }
          console.log('X:', cursorDigiPosX);
          console.log('Y:', cursorDigiPosY);
+
          // var cursorDigi = getDigi((x-DigiXAlter)/DigiXScale, (y-DigiYAlter)/DigiYScale);
          // var cursorDigi = getDigi(x, y);
 
