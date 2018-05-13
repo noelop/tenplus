@@ -78,7 +78,7 @@ function setDigiPos(digi, posX, posY) {
 function getDIGIPos(x){
 	b = x / SIZE_SPACED;
     a = Math.floor(x / SIZE_SPACED);
-    if ((b-a)>0.8){
+    if ((b-a)>SIZE/SIZE_SPACED){
     	a=null
     }
     // if(x - SIZE_SPACED*(a-1) > SIZE){
