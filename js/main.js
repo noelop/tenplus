@@ -22,6 +22,8 @@ var DigiXAlter = 10;
 var DigiYAlter = 290;
 var DigiXScale = 1.1;
 var DigiYScale = 1.1;
+var sTest;
+var score = 0;
 
 
 function preload() {
@@ -33,10 +35,10 @@ function preload() {
 }
 
 function create() {
-
     spawnBoard();
     game.input.addMoveCallback(slideDIGI, this);
-    scoreText = game.add.text(60, 200, '分數 : \n', { font: "30px Arial", fill: "#ffffff", align: "center" });
+    scoreText = game.add.text(30, 225, '++', { font: "20px Arial", fill: "#ffffff", align: "left" });
+	sText = game.add.text(30, 245, 'Score = ', { font: "20px Arial", fill: "#ffffff", align: "left" });
 
 }
 
@@ -267,6 +269,8 @@ function randomizeDigiNumber(digi) {
 function KillDigital(){
 
     if ((getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi))%10===0) {
+		score += getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi);
+		sText.text='Score = '+score;
         selectedDIGI.kill();
         no1digi.kill();
         no2digi.kill();
