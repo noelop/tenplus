@@ -16,7 +16,8 @@ var stepCount;
 var selectedDIGI=null;
 var allowInput=true;
 var scoreText;
-
+var sTest;
+var score = 0;
 function preload() {
 
     game.load.spritesheet("digital_img", "assets/digital.png", SIZE, SIZE);
@@ -25,11 +26,10 @@ function preload() {
 }
 
 function create() {
-
     spawnBoard();
     game.input.addMoveCallback(slideDIGI, this);
     scoreText = game.add.text(30, 325, '++', { font: "20px Arial", fill: "#ffffff", align: "left" });
-
+	sText = game.add.text(30, 345, 'Score = ', { font: "20px Arial", fill: "#ffffff", align: "left" });
 }
 
 function spawnBoard(){
@@ -244,6 +244,8 @@ function randomizeDigiNumber(digi) {
 function KillDigital(){
 
     if ((getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi))%10===0) {
+		score += getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi);
+		sText.text='Score = '+score;
         selectedDIGI.kill();
         no1digi.kill();
         no2digi.kill();
