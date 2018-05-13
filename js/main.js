@@ -1,10 +1,12 @@
 
-var game = new Phaser.Game(380, 600, Phaser.CANVAS, 'phaser-example', {
+var game = new Phaser.Game(470, 750, Phaser.CANVAS, 'phaser-example', {
     preload: preload,
     create: create
 });
 
 var SIZE = 64;
+var spaced=20;
+var SIZE_SPACED=SIZE + spaced;
 var board_cols=5;
 var board_rows=5;
 var digitals;
@@ -16,11 +18,17 @@ var stepCount;
 var selectedDIGI=null;
 var allowInput=true;
 var scoreText;
+var DigiXAlter = 10;
+var DigiYAlter = 290;
+var DigiXScale = 1.1;
+var DigiYScale = 1.1;
+
 
 function preload() {
 
     game.load.spritesheet("digital_img", "assets/digital.png", SIZE, SIZE);
     game.load.spritesheet("digital_img_2", "assets/digital_2.png", SIZE, SIZE);
+    game.stage.backgroundColor = '#0ebfe7';
 
 }
 
@@ -28,16 +36,18 @@ function create() {
 
     spawnBoard();
     game.input.addMoveCallback(slideDIGI, this);
-    scoreText = game.add.text(30, 325, '++', { font: "20px Arial", fill: "#ffffff", align: "left" });
+    scoreText = game.add.text(60, 200, '分數 : \n', { font: "30px Arial", fill: "#ffffff", align: "center" });
 
 }
 
 function spawnBoard(){
 
     digitals=game.add.group();
+    digitals.x = DigiXAlter;
+    digitals.y = DigiYAlter;
     for (var i = 0; i < board_cols;i++){
         for (var j = 0; j < board_rows; j++) {
-            var digital=digitals.create(i*SIZE,j*SIZE,"digital_img");
+            var digital=digitals.create(i*SIZE_SPACED,j*SIZE_SPACED,"digital_img");
             digital.name = 'digi'+i.toString()+'x'+j.toString();
             digital.inputEnabled = true;
             digital.events.onInputDown.add(selectDIGI, this);
@@ -47,6 +57,7 @@ function spawnBoard(){
             digital.kill()
         }
     }
+    digitals.scale = new Phaser.Point(DigiXScale, DigiYScale);
 
     removeKilledDigi();
 
@@ -63,7 +74,12 @@ function setDigiPos(digi, posX, posY) {
 }
 
 function getDIGIPos(x){
-    return Math.floor(x / SIZE);
+
+    a = Math.floor(x / SIZE_SPACED);
+    // if(x - SIZE_SPACED*(a-1) > SIZE){
+    //     a = null
+    // }
+    return a;
 }
 
 function getDigi(x,y){
@@ -129,23 +145,30 @@ function DuplicatePath(x,y){
 function slideDIGI(pointer, x, y){
 
      if (selectedDIGI && pointer.isDown){
-        var cursorDigiPosX = getDIGIPos(x);
-        var cursorDigiPosY = getDIGIPos(y);
-        if (checkIfDigiCanBeMovedHere(cursorDigiPosX,cursorDigiPosY)){
-            DuplicatePath(cursorDigiPosX,cursorDigiPosY)
+
+         var cursorDigiPosX = getDIGIPos((x-DigiXAlter)/DigiXScale);
+         var cursorDigiPosY = getDIGIPos((y-DigiYAlter)/DigiYScale);
+         console.log('X:', cursorDigiPosX);
+         console.log('Y:', cursorDigiPosY);
+         // var cursorDigi = getDigi((x-DigiXAlter)/DigiXScale, (y-DigiYAlter)/DigiYScale);
+         // var cursorDigi = getDigi(x, y);
+
+         if (checkIfDigiCanBeMovedHere(cursorDigiPosX,cursorDigiPosY)){
+             DuplicatePath(cursorDigiPosX, cursorDigiPosY)
+             // console.log(cursorDigi.frame);
+
         }
     }
 }
 
 function tweenDigiPos(Digi, newPosX, newPosY, durationMultiplier) {
 
-    console.log('Tween ',Digi.name,' from ',Digi.posX, ',', Digi.posY, ' to ', newPosX, ',', newPosY);
     if (durationMultiplier === null || typeof durationMultiplier === 'undefined')
     {
         durationMultiplier = 1;
     }
 
-    return game.add.tween(Digi).to({x: newPosX  * SIZE, y: newPosY * SIZE}, 100 * durationMultiplier, Phaser.Easing.Linear.None, true);
+    return game.add.tween(Digi).to({x: newPosX  * SIZE_SPACED, y: newPosY * SIZE_SPACED}, 100 * durationMultiplier, Phaser.Easing.Linear.None, true);
 }
 
 function removeKilledDigi() {
@@ -207,7 +230,7 @@ function refillBoard() {
             {
                 digisMissingFromCol++;
                 digi = digitals.getFirstDead();
-                digi.reset(i * SIZE, -digisMissingFromCol * SIZE);
+                digi.reset(i * SIZE_SPACED, -digisMissingFromCol * SIZE_SPACED);
                 digi.dirty = true;
                 randomizeDigiNumber(digi);
                 setDigiPos(digi, i, j);
@@ -294,8 +317,7 @@ function releaseDIGI(){
 }
 
 function selectDIGI(digital){
-    
-	console.log(allowInput);
+
     if (allowInput)
     {
         stepCount=1;
