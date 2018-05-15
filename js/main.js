@@ -165,6 +165,9 @@ function slideDIGI(pointer, x, y){
          // var cursorDigi = getDigi(x, y);
 
          if (checkIfDigiCanBeMovedHere(cursorDigiPosX,cursorDigiPosY)){
+
+
+
              DuplicatePath(cursorDigiPosX, cursorDigiPosY)
              // console.log(cursorDigi.frame);
 
@@ -294,6 +297,7 @@ function KillDigital(){
         no2digi=null;
         no3digi=null;
         no4digi=null;
+        stepCount=0;
     }
 }
 
@@ -308,6 +312,7 @@ function getDigiColor(digi){
 function releaseDIGI(){
 
     if (stepCount < 3){
+    	stepCount=0;
         selectedDIGI=null;
         no1digi=null;
         no2digi=null;
@@ -320,7 +325,7 @@ function releaseDIGI(){
     no2digi=null;
     no3digi=null;
     no4digi=null;
-
+    stepCount=0;
     removeKilledDigi()
     var dropDigiDuration = dropDigis();
 
@@ -346,10 +351,56 @@ function checkIfDigiCanBeMovedHere(toPosX, toPosY) {
     {
         return false;
     }
+    if (stepCount===1) {
+    	
+    	if (toPosX-selectedDIGI.posX>1||toPosX-selectedDIGI.posX<(-1)||toPosY-selectedDIGI.posY>1||toPosY-selectedDIGI.posY<-1) {
+    		return false;
+    	}
 
-    if (stepCount===5)
+    }
+    if (stepCount===2) {
+    	if (toPosX===selectedDIGI.posX &&toPosY===selectedDIGI.posY ){
+    		scoreText.text = getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
+    		stepCount=1;
+    		no1digi=null;
+    		return false;
+    	}
+    	if (toPosX-no1digi.posX>1||toPosX-no1digi.posX<(-1)||toPosY-no1digi.posY>1||toPosY-no1digi.posY<-1) {
+    		return false;
+    	}
+    	
+    }
+    if (stepCount===3) {
+    	if (toPosX===no1digi.posX &&toPosY===no1digi.posY ){
+    		scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
+    		stepCount=2;
+    		no2digi=null;
+    		return false;
+    	}
+    	if (toPosX-no2digi.posX>1||toPosX-no2digi.posX<(-1)||toPosY-no2digi.posY>1||toPosY-no2digi.posY<-1) {
+    		return false;
+    	}
+    }
+    if (stepCount===4)
     {
-        return false;
+    	if (toPosX===no2digi.posX &&toPosY===no2digi.posY ){
+    		scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
+    		stepCount=3;
+    		no3digi=null;
+    		return false;
+    	}
+    	if (toPosX-no3digi.posX>1||toPosX-no3digi.posX<(-1)||toPosY-no3digi.posY>1||toPosY-no3digi.posY<-1) {
+    		return false;
+    	}
+    }
+    if (stepCount===5){
+    	if (toPosX===no3digi.posX &&toPosY===no3digi.posY ){
+    		scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
+    		stepCount=4;
+    		no4digi=null;
+    		return false;
+    	}
+    	return false;
     }
     return true;
 }
