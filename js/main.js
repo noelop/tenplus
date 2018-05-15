@@ -1,3 +1,4 @@
+// import EventsOfButtonClicked from 'events_of_button_clicked';
 
 var game = new Phaser.Game(470, 750, Phaser.CANVAS, 'phaser-example', {
     preload: preload,
@@ -24,12 +25,15 @@ var DigiXScale = 1.1;
 var DigiYScale = 1.1;
 var sTest;
 var score = 0;
+var triggerSenstive = 0.8;
 
 
 function preload() {
 
-    game.load.spritesheet("digital_img", "assets/digital.png", SIZE, SIZE);
-    game.load.spritesheet("digital_img_2", "assets/digital_2.png", SIZE, SIZE);
+    game.load.spritesheet("DigitalImg", "assets/digital.png", SIZE, SIZE);
+    game.load.spritesheet("SlectedDigital", "assets/digital_y.png", SIZE, SIZE);
+    game.load.image("menu", 'assets/number-buttons-90x90.png', 270, 180);
+    game.load.image("o", 'assets/9.png', 270, 180);
     game.stage.backgroundColor = '#0ebfe7';
 
 }
@@ -38,8 +42,8 @@ function create() {
 
     spawnBoard();
     game.input.addMoveCallback(slideDIGI, this);
-    scoreText = game.add.text(30, 225, '++', { font: "20px Arial", fill: "#ffffff", align: "left" });
-	sText = game.add.text(30, 245, 'Score = ', { font: "20px Arial", fill: "#ffffff", align: "left" });
+    scoreText = game.add.text(30, 215, '++', { font: "30px Arial", fill: "#ffffff", align: "center" });
+	sText = game.add.text(160, 10, 'Score: ', { font: "30px Arial", fill: "#ffffff", align: "center" });
 
 }
 
@@ -50,7 +54,7 @@ function spawnBoard(){
     digitals.y = DigiYAlter;
     for (var i = 0; i < board_cols;i++){
         for (var j = 0; j < board_rows; j++) {
-            var digital=digitals.create(i*SIZE_SPACED,j*SIZE_SPACED,"digital_img");
+            var digital=digitals.create(i*SIZE,j*SIZE,"DigitalImg");
             digital.name = 'digi'+i.toString()+'x'+j.toString();
             digital.inputEnabled = true;
             digital.events.onInputDown.add(selectDIGI, this);
@@ -69,6 +73,11 @@ function spawnBoard(){
     selectedDIGI = null;
 }
 
+function slectedDigitels() {
+    var s=digitals.create(i*SIZE_SPACED,j*SIZE_SPACED,"DigitalImg");
+
+}
+
 function setDigiPos(digi, posX, posY) {
 
     digi.posX = posX;
@@ -79,12 +88,9 @@ function setDigiPos(digi, posX, posY) {
 function getDIGIPos(x){
 	b = x / SIZE_SPACED;
     a = Math.floor(x / SIZE_SPACED);
-    if ((b-a)>SIZE/SIZE_SPACED){
+    if ((b-a)>SIZE/SIZE_SPACED*triggerSenstive){
     	a=null
     }
-    // if(x - SIZE_SPACED*(a-1) > SIZE){
-    //     a = null
-    // }
     return a;
 }
 
@@ -98,6 +104,9 @@ function calcDigiId(posX, posY) {
 
 function DuplicatePath(x,y){
 
+    if (x===null || y===null) {
+        return;
+    }
     if (x===selectedDIGI.posX && y===selectedDIGI.posY){
         return ;
     }
@@ -154,20 +163,12 @@ function slideDIGI(pointer, x, y){
 
          var cursorDigiPosX = getDIGIPos((x-DigiXAlter)/DigiXScale);
          var cursorDigiPosY = getDIGIPos((y-DigiYAlter)/DigiYScale);
-         if (cursorDigiPosX===null ||cursorDigiPosY===null){
-         	cursorDigiPosX=null;
-         	cursorDigiPosY=null;
-         	return;
-         }
+
          console.log('X:', cursorDigiPosX);
          console.log('Y:', cursorDigiPosY);
 
-         // var cursorDigi = getDigi((x-DigiXAlter)/DigiXScale, (y-DigiYAlter)/DigiYScale);
-         // var cursorDigi = getDigi(x, y);
-
          if (checkIfDigiCanBeMovedHere(cursorDigiPosX,cursorDigiPosY)){
              DuplicatePath(cursorDigiPosX, cursorDigiPosY)
-             // console.log(cursorDigi.frame);
 
         }
     }
@@ -283,7 +284,7 @@ function KillDigital(){
 
     if ((getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi))%10===0) {
 		score += getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi);
-		sText.text='Score = '+score;
+		sText.text='Score: '+score;
         selectedDIGI.kill();
         no1digi.kill();
         no2digi.kill();
@@ -332,13 +333,14 @@ function releaseDIGI(){
 
     allowInput = false;
 }
-
+ 
 function selectDIGI(digital){
 
     if (allowInput)
     {
         stepCount=1;
         selectedDIGI = digital;
+        // selectedDIGI.loadTexture('SlectedDigital', SIZE, SIZE )
         // scoreText.text='123';
         scoreText.text=getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
     }
