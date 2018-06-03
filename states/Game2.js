@@ -172,7 +172,7 @@ function DuplicatePath(x,y){
     }
     else{
         no1digi=getDigi(x,y);
-        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
+        supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
         stepCount=2;
         return ;
     }
@@ -183,7 +183,7 @@ function DuplicatePath(x,y){
     }
     else{
         no2digi=getDigi(x,y);
-        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
+        supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
         stepCount=3;
         return ;
     }
@@ -194,7 +194,7 @@ function DuplicatePath(x,y){
     }
     else{
         no3digi=getDigi(x,y);
-        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
+        supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
         stepCount=4;
         return ;
     }
@@ -205,7 +205,7 @@ function DuplicatePath(x,y){
     }
     else{
         no4digi=getDigi(x,y);
-        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'+'+getDigiColor(no4digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi));
+        supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'+'+getDigiColor(no4digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi));
         stepCount=5;
         return ;
     }
@@ -402,7 +402,7 @@ function selectDIGI(digital){
         selectedDIGI = digital;
         // selectedDIGI.loadTexture('SlectedDigital', SIZE, SIZE )
         // scoreText.text='123';
-        scoreText.text=getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
+        supportText.text=getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
     }
 }
 
@@ -421,7 +421,7 @@ function checkIfDigiCanBeMovedHere(toPosX, toPosY) {
     }
     if (stepCount===2) {
     	if (toPosX===selectedDIGI.posX &&toPosY===selectedDIGI.posY ){
-    		scoreText.text = getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
+    		supportText.text = getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
     		stepCount=1;
     		no1digi=null;
     		return false;
@@ -433,7 +433,7 @@ function checkIfDigiCanBeMovedHere(toPosX, toPosY) {
     }
     if (stepCount===3) {
     	if (toPosX===no1digi.posX &&toPosY===no1digi.posY ){
-    		scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
+    		supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
     		stepCount=2;
     		no2digi=null;
     		return false;
@@ -445,7 +445,7 @@ function checkIfDigiCanBeMovedHere(toPosX, toPosY) {
     if (stepCount===4)
     {
     	if (toPosX===no2digi.posX &&toPosY===no2digi.posY ){
-    		scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
+    		supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
     		stepCount=3;
     		no3digi=null;
     		return false;
@@ -456,7 +456,7 @@ function checkIfDigiCanBeMovedHere(toPosX, toPosY) {
     }
     if (stepCount===5){
     	if (toPosX===no3digi.posX &&toPosY===no3digi.posY ){
-    		scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
+    		supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
     		stepCount=4;
     		no4digi=null;
     		return false;
