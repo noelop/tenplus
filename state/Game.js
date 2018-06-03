@@ -32,11 +32,11 @@ var step = 10;
 
 function preload() {
 
-    game.load.spritesheet("DigitalImg", "assets/digital.png", SIZE, SIZE);
-    game.load.spritesheet("SlectedDigital", "assets/digital_y.png", SIZE, SIZE);
-    game.load.image("menu", 'assets/number-buttons-90x90.png', 270, 180);
-    game.load.image("o", 'assets/9.png', 270, 180);
-    game.load.image("green", 'assets/green.png', 270, 180);
+    game.load.spritesheet("DigitalImg", "assets/images/digital.png", SIZE, SIZE);
+    game.load.spritesheet("SlectedDigital", "assets/images/digital_y.png", SIZE, SIZE);
+    game.load.image("menu", 'assets/images/number-buttons-90x90.png', 270, 180);
+    game.load.image("o", 'assets/images/9.png', 270, 180);
+    game.load.image("green", 'assets/images/green.png', 270, 180);
     game.stage.backgroundColor = '#0ebfe7';
 
 }
