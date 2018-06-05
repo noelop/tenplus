@@ -1,3 +1,4 @@
+// import EventsOfButtonClicked from 'events_of_button_clicked';
 
 var game = new Phaser.Game(470, 750, Phaser.CANVAS, 'phaser-example', {
     preload: preload,
@@ -24,24 +25,80 @@ var DigiXScale = 1.1;
 var DigiYScale = 1.1;
 var sTest;
 var score = 0;
-
+var triggerSenstive = 0.8;
+var w = 470, h = 750;
+var target = 3;
+var step = 10;
 
 function preload() {
 
-    game.load.spritesheet("digital_img", "assets/digital.png", SIZE, SIZE);
-    game.load.spritesheet("digital_img_2", "assets/digital_2.png", SIZE, SIZE);
+    game.load.spritesheet("DigitalImg", "assets/digital.png", SIZE, SIZE);
+    game.load.spritesheet("SlectedDigital", "assets/digital_2.png", SIZE, SIZE);
     game.stage.backgroundColor = '#0ebfe7';
 
 }
 
 function create() {
+
     spawnBoard();
     game.input.addMoveCallback(slideDIGI, this);
-    scoreText = game.add.text(30, 225, '++', { font: "20px Arial", fill: "#ffffff", align: "left" });
-	sText = game.add.text(30, 245, 'Score = ', { font: "20px Arial", fill: "#ffffff", align: "left" });
-
+    supportText = game.add.text(30, 215, ' ', { font: "30px Arial", fill: "#fff"});
+    scoreText = game.add.text(w - 100, 70, 'score: 0.00', { font: "16px Arial", fill: "#fff"});
+    timeText = game.add.text(w - 100, 100, 'time: 0.00', { font: "16px Arial", fill: "#fff"});
+    stepText = game.add.text(w - 100, 130, 'step: 0/'+step, { font: "16px Arial", fill: "#fff"});
+    target_number = game.add.text(w/2 - 30, 100, target, { font: "60px Arial", fill: "#fff"});
+    pause_label = game.add.text(w - 100, 20, 'Pause', { font: '24px Arial', fill: '#fff'});
+    pause_label.inputEnabled = true;
+    pause_label.events.onInputUp.add(paused);
+    game.input.onDown.add(unpause, self);
+    game.add.sprite(0, 10, 'green');
 }
 
+function paused() {
+      // When the paus button is pressed, we pause the game
+      game.paused = true;
+
+      // Then add the menu
+      menu = game.add.sprite(w/2, h/2, 'menu');
+      menu.anchor.setTo(0.5, 0.5);
+
+      // And a label to illustrate which menu item was chosen. (This is not necessary)
+      choiseLabel = game.add.text(w/2, h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#000000' });
+      choiseLabel.anchor.setTo(0.5, 0.5);
+  }
+
+  function unpause(event){
+      // Only act if paused
+      if(game.paused){
+          // Calculate the corners of the menu
+          var x1 = w/2 - 270/2, x2 = w/2 + 270/2,
+              y1 = h/2 - 180/2, y2 = h/2 + 180/2;
+
+          // Check if the click was inside the menu
+          if(event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2 ){
+              // The choicemap is an array that will help us see which item was clicked
+              var choisemap = ['one', 'two', 'three', 'four', 'five', 'six'];
+
+              // Get menu local coordinates for the click
+              var x = event.x - x1,
+                  y = event.y - y1;
+
+              // Calculate the choice
+              var choise = Math.floor(x / 90) + 3*Math.floor(y / 90);
+
+              // Display the choice
+              choiseLabel.text = 'You chose menu item: ' + choisemap[choise];
+          }
+          else{
+              // Remove the menu and the label
+              menu.destroy();
+              choiseLabel.destroy();
+
+              // Unpause the game
+              game.paused = false;
+          }
+      }
+  }
 function spawnBoard(){
 
     digitals=game.add.group();
@@ -49,7 +106,7 @@ function spawnBoard(){
     digitals.y = DigiYAlter;
     for (var i = 0; i < board_cols;i++){
         for (var j = 0; j < board_rows; j++) {
-            var digital=digitals.create(i*SIZE_SPACED,j*SIZE_SPACED,"digital_img");
+            var digital=digitals.create(i*SIZE,j*SIZE,"DigitalImg");
             digital.name = 'digi'+i.toString()+'x'+j.toString();
             digital.inputEnabled = true;
             digital.events.onInputDown.add(selectDIGI, this);
@@ -68,6 +125,11 @@ function spawnBoard(){
     selectedDIGI = null;
 }
 
+function slectedDigitels() {
+    var s=digitals.create(i*SIZE_SPACED,j*SIZE_SPACED,"DigitalImg");
+
+}
+
 function setDigiPos(digi, posX, posY) {
 
     digi.posX = posX;
@@ -76,14 +138,11 @@ function setDigiPos(digi, posX, posY) {
 }
 
 function getDIGIPos(x){
-	b = x / SIZE_SPACED;
+    b = x / SIZE_SPACED;
     a = Math.floor(x / SIZE_SPACED);
-    if ((b-a)>0.8){
-    	a=null
+    if ((b-a)>SIZE/SIZE_SPACED*triggerSenstive){
+        a=null
     }
-    // if(x - SIZE_SPACED*(a-1) > SIZE){
-    //     a = null
-    // }
     return a;
 }
 
@@ -97,6 +156,9 @@ function calcDigiId(posX, posY) {
 
 function DuplicatePath(x,y){
 
+    if (x===null || y===null) {
+        return;
+    }
     if (x===selectedDIGI.posX && y===selectedDIGI.posY){
         return ;
     }
@@ -107,7 +169,7 @@ function DuplicatePath(x,y){
     }
     else{
         no1digi=getDigi(x,y);
-        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
+        supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
         stepCount=2;
         return ;
     }
@@ -118,7 +180,7 @@ function DuplicatePath(x,y){
     }
     else{
         no2digi=getDigi(x,y);
-        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
+        supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
         stepCount=3;
         return ;
     }
@@ -129,7 +191,7 @@ function DuplicatePath(x,y){
     }
     else{
         no3digi=getDigi(x,y);
-        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
+        supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
         stepCount=4;
         return ;
     }
@@ -140,7 +202,7 @@ function DuplicatePath(x,y){
     }
     else{
         no4digi=getDigi(x,y);
-        scoreText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'+'+getDigiColor(no4digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi));
+        supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'+'+getDigiColor(no4digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi));
         stepCount=5;
         return ;
     }
@@ -153,20 +215,15 @@ function slideDIGI(pointer, x, y){
 
          var cursorDigiPosX = getDIGIPos((x-DigiXAlter)/DigiXScale);
          var cursorDigiPosY = getDIGIPos((y-DigiYAlter)/DigiYScale);
-         if (cursorDigiPosX===null ||cursorDigiPosY===null){
-         	cursorDigiPosX=null;
-         	cursorDigiPosY=null;
-         	return;
-         }
+
          console.log('X:', cursorDigiPosX);
          console.log('Y:', cursorDigiPosY);
 
-         // var cursorDigi = getDigi((x-DigiXAlter)/DigiXScale, (y-DigiYAlter)/DigiYScale);
-         // var cursorDigi = getDigi(x, y);
-
          if (checkIfDigiCanBeMovedHere(cursorDigiPosX,cursorDigiPosY)){
+
+
+
              DuplicatePath(cursorDigiPosX, cursorDigiPosY)
-             // console.log(cursorDigi.frame);
 
         }
     }
@@ -215,19 +272,17 @@ function dropDigis() {
                 tweenDigiPos(digi, digi.posX, digi.posY, dropRowCount);
             }
         }
-
         dropRowCountMax = Math.max(dropRowCount, dropRowCountMax);
     }
-
     return dropRowCountMax;
-
 }
+
 
 function refillBoard() {
 
     allowInput = false;
 
-	var maxDigiMissingFromCol = 0;
+    var maxDigiMissingFromCol = 0;
 
     for (var i = 0; i < board_cols; i++)
     {
@@ -269,6 +324,7 @@ function boardRefilled() {
     } else {
         allowInput = true;
     }
+
 }
 
 function randomizeDigiNumber(digi) {
@@ -277,23 +333,24 @@ function randomizeDigiNumber(digi) {
 
 function KillDigital(){
 
-    if ((getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi))%10===0) {
-		score += getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi);
-		sText.text='Score = '+score;
-        selectedDIGI.kill();
+    if ((getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi)) % target===0) {
+      score += getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi)+getDigiColor(no4digi);
+      scoreText.text='Score: '+score;
+          selectedDIGI.kill();
         no1digi.kill();
         no2digi.kill();
         if (no3digi !==null){
             no3digi.kill();
         }
         if (no4digi !== null) {
-            no4digi.kill();
+            no4digi.log('SlectedDigital');
         }
         selectedDIGI=null;
         no1digi=null;
         no2digi=null;
         no3digi=null;
         no4digi=null;
+        stepCount=0;
     }
 }
 
@@ -302,12 +359,13 @@ function getDigiColor(digi){
     if (digi ===null){
         return 0;
     }
-	return digi.frame;
+    return digi.frame;
 }
 
 function releaseDIGI(){
 
     if (stepCount < 3){
+        stepCount=0;
         selectedDIGI=null;
         no1digi=null;
         no2digi=null;
@@ -320,7 +378,7 @@ function releaseDIGI(){
     no2digi=null;
     no3digi=null;
     no4digi=null;
-
+    stepCount=0;
     removeKilledDigi()
     var dropDigiDuration = dropDigis();
 
@@ -328,15 +386,16 @@ function releaseDIGI(){
 
     allowInput = false;
 }
-
+ 
 function selectDIGI(digital){
 
     if (allowInput)
     {
         stepCount=1;
         selectedDIGI = digital;
+        // selectedDIGI.loadTexture('SlectedDigital', SIZE, SIZE )
         // scoreText.text='123';
-        scoreText.text=getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
+        supportText.text=getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
     }
 }
 
@@ -346,9 +405,55 @@ function checkIfDigiCanBeMovedHere(toPosX, toPosY) {
     {
         return false;
     }
+    if (stepCount===1) {
+        
+        if (toPosX-selectedDIGI.posX>1||toPosX-selectedDIGI.posX<(-1)||toPosY-selectedDIGI.posY>1||toPosY-selectedDIGI.posY<-1) {
+            return false;
+        }
 
-    if (stepCount===5)
+    }
+    if (stepCount===2) {
+        if (toPosX===selectedDIGI.posX &&toPosY===selectedDIGI.posY ){
+            supportText.text = getDigiColor(selectedDIGI)+'='+getDigiColor(selectedDIGI);
+            stepCount=1;
+            no1digi=null;
+            return false;
+        }
+        if (toPosX-no1digi.posX>1||toPosX-no1digi.posX<(-1)||toPosY-no1digi.posY>1||toPosY-no1digi.posY<-1) {
+            return false;
+        }
+        
+    }
+    if (stepCount===3) {
+        if (toPosX===no1digi.posX &&toPosY===no1digi.posY ){
+            supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi));
+            stepCount=2;
+            no2digi=null;
+            return false;
+        }
+        if (toPosX-no2digi.posX>1||toPosX-no2digi.posX<(-1)||toPosY-no2digi.posY>1||toPosY-no2digi.posY<-1) {
+            return false;
+        }
+    }
+    if (stepCount===4)
     {
+        if (toPosX===no2digi.posX &&toPosY===no2digi.posY ){
+            supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi));
+            stepCount=3;
+            no3digi=null;
+            return false;
+        }
+        if (toPosX-no3digi.posX>1||toPosX-no3digi.posX<(-1)||toPosY-no3digi.posY>1||toPosY-no3digi.posY<-1) {
+            return false;
+        }
+    }
+    if (stepCount===5){
+        if (toPosX===no3digi.posX &&toPosY===no3digi.posY ){
+            supportText.text = getDigiColor(selectedDIGI)+'+'+getDigiColor(no1digi)+'+'+getDigiColor(no2digi)+'+'+getDigiColor(no3digi)+'='+(getDigiColor(selectedDIGI)+getDigiColor(no1digi)+getDigiColor(no2digi)+getDigiColor(no3digi));
+            stepCount=4;
+            no4digi=null;
+            return false;
+        }
         return false;
     }
     return true;
