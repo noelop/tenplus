@@ -438,6 +438,7 @@ function checkIfDigiCanBeMovedHere(toPosX, toPosY) {
     		no2digi=null;
     		return false;
     	}
+
     	if (toPosX-no2digi.posX>1||toPosX-no2digi.posX<(-1)||toPosY-no2digi.posY>1||toPosY-no2digi.posY<-1) {
     		return false;
     	}
