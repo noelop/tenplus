@@ -19,6 +19,7 @@ Splash.prototype = {
         game.load.audio('exit', 'assets/bgm/Exit the Premises.mp3');
         game.load.audio('bongo', 'assets/bgm/Bongo_Madness.mp3');
         game.load.audio('wishful', 'assets/bgm/Wishful_Thinking.mp3');
+        game.load.audio('francis', 'assets/bgm/St_Francis.mp3');
     },
     // varios freebies found from google image search
     loadImages: function () {
@@ -73,8 +74,10 @@ Splash.prototype = {
     addGameMusic: function () {
         music_wishful = game.add.audio('wishful');
         music_bongo = game.add.audio('bongo');
+        music_francis = game.add.audio('francis');
         music_wishful.loop = true;
         music_bongo.loop = true;
+        music_francis.loop = true;
         console.log('splash play', gameOptions.playMusic, gameOptions.playSound);
         if (gameOptions.playMusic !== false) {
             gameOptions.music_current = music_wishful.name;

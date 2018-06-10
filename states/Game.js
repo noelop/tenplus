@@ -58,7 +58,12 @@ Game.prototype = {
         this.addTextOption('R', w - 400, 65, function (e) {
             this.game.state.start("Game");
         });
-
+        this.addTextOption('O', w - 100, 65, function (e) {
+        	//this.gameOver();
+        	//console.log('game:',score)
+        	GameOver.Score=score;
+            this.game.state.start("GameOver");
+        });
         this.addTextOption('P', w - 300, 65, function (e) {
             this.onPaused();
         });
@@ -67,6 +72,7 @@ Game.prototype = {
         this.addTextOption('Q', w - 200, 65, function (e) {
             music_wishful.stop();
             music_bongo.stop();
+
             gameOptions.playMusic = false;
         });
 
@@ -102,8 +108,8 @@ Game.prototype = {
                 txt.inputEnabled = true;
                 txt.events.onInputDown.add(this.selectDIGI, this);
                 txt.events.onInputUp.add(this.releaseDIGI,this);
-                // txt.events.onInputOver.add(onOver, this);
-                // txt.events.onInputOut.add(onOut, this);
+                //txt.events.onInputOver.add(onOver, this);
+                //txt.events.onInputOut.add(onOut, this);
                 this.setDigiPos(txt,i,j);
                 digitals.add(txt);
 
@@ -437,7 +443,6 @@ Game.prototype = {
     randomizeDigiNumber: function() {
         return game.rnd.integerInRange(0, gameOptions.digitRange? 10 - 1 :　5);
     },
-
     onPaused: function() {
         // When the paus button is pressed, we pause the game
         this.game.paused = true;
