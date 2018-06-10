@@ -31,11 +31,15 @@ var Game = function(game) {
     scoreText = 0;
     DigiXAlter = 30;
     DigiYAlter = 400;
+    winFactorCount = 10;
+    winFactorText = 0;
 };
 
 Game.prototype = {
 
     init: function () {
+        score = 0;
+        winFactorCount = 10;
 
         this.game.add.sprite(0, 0, 'Game_bg');
         this.game.add.sprite(0, 20, 'green-bar');
@@ -69,15 +73,15 @@ Game.prototype = {
         this.addTextOption(gameOptions.targetNumber? 5+'x' : 3+'x' , w / 2, 210, null, 80, 'Impact');
 
         this.addTextOption(gameOptions.winFactor? 'step' : 'time', w / 2 - 150, 160, null, 35);
-        this.addTextOption(10, w / 2 - 150, 210, null, 30, 'Impact');
+        winFactorText = this.addTextOption(winFactorCount, w / 2 - 150, 210, null, 30, 'Impact');
 
         this.addTextOption('Score', w / 2 + 150, 160, null, 35);
 
-        scoreText = this.addTextOption(score, w / 2 + 150, 210, null, 30, 'Impact');
 
+        scoreText = this.addTextOption(score, w / 2 + 150, 210, null, 30, 'Impact');
         supportLabel = this.addTextOption('Connect Numbers', w / 2, 330, null, 35, 'Impact');
 
-    },
+        },
 
     create: function () {
         this.spawnBoard();
@@ -88,16 +92,6 @@ Game.prototype = {
 
     spawnBoard: function () {
 
-        var onOver = function (target) {
-            target.fill = "#f9f900";
-            target.stroke = "rgba(200,200,200,0.5)";
-            txt.useHandCursor = true;
-        };
-        var onOut = function (target) {
-            target.fill = "white";
-            target.stroke = "rgba(0,0,0,0)";
-            txt.useHandCursor = false;
-        };
         digitals = this.game.add.group();
         digitals.x = DigiXAlter;
         digitals.y = DigiYAlter;
@@ -108,15 +102,30 @@ Game.prototype = {
                 txt.inputEnabled = true;
                 txt.events.onInputDown.add(this.selectDIGI, this);
                 txt.events.onInputUp.add(this.releaseDIGI,this);
-                txt.events.onInputOver.add(onOver, this);
-                txt.events.onInputOut.add(onOut, this);
+                // txt.events.onInputOver.add(onOver, this);
+                // txt.events.onInputOut.add(onOut, this);
                 this.setDigiPos(txt,i,j);
                 digitals.add(txt);
 
             }
         }
 
+    },
 
+    onOver_f: function (target) {
+        if (target !== null) {
+            target.fill = "#f9f900";
+            target.stroke = "rgba(200,200,200,0.5)";
+            // target.useHandCursor = true;
+
+        }
+        return target;
+    },
+
+    onOut_f: function (target) {
+        target.fill = "white";
+        target.stroke = "rgba(0,0,0,0)";
+        // target.useHandCursor = false;
     },
 
 
@@ -143,9 +152,9 @@ Game.prototype = {
                 n5=this.getDigiText(no4digi);
              console.log(n1, n2, n3, n4, n5);
 
-             if (this.checkIfDigiCanBeMovedHere(cursorDigiPosX,cursorDigiPosY)){
+             if (this.checkIfDigiCanBeMovedHere(cursorDigiPosX,cursorDigiPosY)) {
                  this.DuplicatePath(cursorDigiPosX, cursorDigiPosY)
-            }
+             }
         }
     },
 
@@ -306,8 +315,8 @@ Game.prototype = {
         no4digi = null;
         this.removeKilledDigi();
         var dropDigiDuration = this.dropDigis();
-
-        game.time.events.add(dropDigiDuration * 100, this.refillBoard);
+        // alert(this.property);
+        game.time.events.add(dropDigiDuration * 100, this.refillBoard,this);
 
         // allowInput = false;
     },
@@ -332,17 +341,12 @@ Game.prototype = {
                 }
                 else if (dropRowCount > 0)
                 {
-                    console.log('drop:', dropRowCount);
                     digi.dirty = true
                     this.setDigiPos(digi, digi.posX, digi.posY + dropRowCount);
                     this.tweenDigiPos(digi, digi.posX, digi.posY, dropRowCount);
 
                 }
 
-                else {
-                    console.log('errorrrrrrrr');
-
-                }
             }
 
             dropRowCountMax = Math.max(dropRowCount, dropRowCountMax);
@@ -371,11 +375,10 @@ Game.prototype = {
 
     removeKilledDigi: function() {
         digitals.forEach(function(digi) {
-            console.log(digi.alive);
             if (!digi.alive) {
-                digi.posX = -1;
-                digi.posY = -1;
-                digi.id = -1;
+                digi.posX = -2;
+                digi.posY = -2;
+                digi.id = -2;
             }
         });
 
@@ -393,6 +396,11 @@ Game.prototype = {
         if ((this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi)+this.getDigiText(no3digi)+this.getDigiText(no4digi)) % (gameOptions.targetNumber? 5 :　3)===0) {
             score += this.getDigiText(selectedDIGI) + this.getDigiText(no1digi) + this.getDigiText(no2digi) + this.getDigiText(no3digi) + this.getDigiText(no4digi);
             scoreText.text = score;
+            winFactorCount -= 1;
+            winFactorText.text = winFactorCount;
+            if(winFactorCount===10){
+                this.game.state.start("GameOver");
+            }
             selectedDIGI.kill();
             no1digi.kill();
             no2digi.kill();
@@ -523,28 +531,43 @@ Game.prototype = {
 
             for (var j = board_rows - 1; j >= 0; j--)
             {
+                //alert(this.Game)
                 var digi = this.getDigi(i, j);
 
                 if (digi === null)
                 {
-                //     digisMissingFromCol++;
-                //     digi = digitals.getFirstDead();
-                //     digi.reset(i * SIZE_SPACED, -digisMissingFromCol * SIZE_SPACED);
-                //     digi.dirty = true;
-                    digi = this.randomizeDigiNumber();
-                    console.log(digi.text)
-                    // this.setDigiPos(digi, i, j);
-                    // this.tweenDigiPos(digi, digi.posX, digi.posY, digisMissingFromCol * 2);
+                    digisMissingFromCol++;
+                    digi = digitals.getFirstDead();
+                    digi.reset(i * SIZE_SPACED, -digisMissingFromCol * SIZE_SPACED);
+                    digi.dirty = true;
+                    digi.text = this.randomizeDigiNumber(digi);
+                    console.log(digi.text);
+                    this.setDigiPos(digi, i, j);
+                    this.tweenDigiPos(digi, digi.posX, digi.posY, digisMissingFromCol * 2);
                 }
             }
             maxDigiMissingFromCol = Math.max(maxDigiMissingFromCol, digisMissingFromCol);
         }
 
-        game.time.events.add(maxDigiMissingFromCol * 2 * 100, boardRefilled);
+        game.time.events.add(maxDigiMissingFromCol * 2 * 100, this.boardRefilled, this);
 
         allowInput = true;
+    },
+
+    boardRefilled: function() {
+
+        var canKill = false;
+
+        if(canKill){
+            this.removeKilledDigi();
+            var dropDigiDuration = this.dropDigis();
+
+            game.time.events.add(dropDigiDuration * 100, this.refillBoard);
+            allowInput = false;
+        } else {
+            allowInput = true;
+        }
+
     }
-
-
 };
 

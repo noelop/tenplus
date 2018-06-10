@@ -270,7 +270,7 @@ function dropDigis() {
             }
             else if (dropRowCount > 0)
             {
-                digi.dirty = true
+                digi.dirty = true;
                 setDigiPos(digi, digi.posX, digi.posY + dropRowCount);
                 tweenDigiPos(digi, digi.posX, digi.posY, dropRowCount);
 
