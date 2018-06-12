@@ -119,9 +119,10 @@ Game.prototype = {
     },
 
     onOver_f: function (target) {
+    	console.log(target.text);
         if (target !== null) {
             target.fill = "#f9f900";
-            target.stroke = "rgba(200,200,200,0.5)";
+            //target.stroke = "rgba(200,200,200,0.5)";
             // target.useHandCursor = true;
 
         }
@@ -130,7 +131,7 @@ Game.prototype = {
 
     onOut_f: function (target) {
         target.fill = "white";
-        target.stroke = "rgba(0,0,0,0)";
+        //target.stroke = "rgba(0,0,0,0)";
         // target.useHandCursor = false;
     },
 
@@ -150,13 +151,13 @@ Game.prototype = {
              var cursorDigiPosX = this.getDIGIPos(x-DigiXAlter);
              var cursorDigiPosY = this.getDIGIPos(y-DigiYAlter);
 
-             console.log('X:', cursorDigiPosX,'Y:', cursorDigiPosY);
-             var n1=this.getDigiText(selectedDIGI),
-                n2=this.getDigiText(no1digi),
-                n3=this.getDigiText(no2digi),
-                n4=this.getDigiText(no3digi),
-                n5=this.getDigiText(no4digi);
-             console.log(n1, n2, n3, n4, n5);
+             //console.log('X:', cursorDigiPosX,'Y:', cursorDigiPosY);
+             //var n1=this.getDigiText(selectedDIGI),
+             //   n2=this.getDigiText(no1digi),
+             //   n3=this.getDigiText(no2digi),
+             //   n4=this.getDigiText(no3digi),
+             //   n5=this.getDigiText(no4digi);
+             //console.log(n1, n2, n3, n4, n5);
 
              if (this.checkIfDigiCanBeMovedHere(cursorDigiPosX,cursorDigiPosY)) {
                  this.DuplicatePath(cursorDigiPosX, cursorDigiPosY)
@@ -183,6 +184,7 @@ Game.prototype = {
         }
         else{
             no1digi=this.getDigi(x,y);
+            no1digi.fill = "#f9f900";
             supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi));
             stepCount=2;
             return ;
@@ -194,6 +196,7 @@ Game.prototype = {
         }
         else{
             no2digi=this.getDigi(x,y);
+            no2digi.fill = "#f9f902";
             supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'+'+this.getDigiText(no2digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi));
             stepCount=3;
             return ;
@@ -205,6 +208,7 @@ Game.prototype = {
         }
         else{
             no3digi=this.getDigi(x,y);
+            no3digi.fill = "#f9f903";
             supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'+'+this.getDigiText(no2digi)+'+'+this.getDigiText(no3digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi)+this.getDigiText(no3digi));
             stepCount=4;
             return ;
@@ -216,6 +220,7 @@ Game.prototype = {
         }
         else{
             no4digi=this.getDigi(x,y);
+            no4digi.fill = "#f9f904";
             supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'+'+this.getDigiText(no2digi)+'+'+this.getDigiText(no3digi)+'+'+this.getDigiText(no4digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi)+this.getDigiText(no3digi)+this.getDigiText(no4digi));
             stepCount=5;
             return ;
@@ -244,6 +249,7 @@ Game.prototype = {
             if (toPosX===selectedDIGI.posX &&toPosY===selectedDIGI.posY ){
                 supportLabel.text = this.getDigiText(selectedDIGI)+'='+(this.getDigiText(selectedDIGI));
                 stepCount=1;
+                no1digi.fill = "#fbfbff";
                 no1digi=null;
                 return false;
             }
@@ -256,6 +262,7 @@ Game.prototype = {
             if (toPosX===no1digi.posX &&toPosY===no1digi.posY ){
                 supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi));
                 stepCount=2;
+                no2digi.fill = "#fdffff";
                 no2digi=null;
                 return false;
             }
@@ -269,6 +276,7 @@ Game.prototype = {
             if (toPosX===no2digi.posX &&toPosY===no2digi.posY ){
                 supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'+'+this.getDigiText(no2digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi));
                 stepCount=3;
+                no3digi.fill = "#fffff4";
                 no3digi=null;
                 return false;
             }
@@ -280,6 +288,7 @@ Game.prototype = {
             if (toPosX===no3digi.posX &&toPosY===no3digi.posY ){
                 supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'+'+this.getDigiText(no2digi)+'+'+this.getDigiText(no3digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi)+this.getDigiText(no3digi));
                 stepCount=4;
+                no4digi.fill = "#fbfffd";
                 no4digi=null;
                 return false;
             }
@@ -301,7 +310,21 @@ Game.prototype = {
 
 
     releaseDIGI: function(){
-
+    	if(selectedDIGI!==null){
+        	selectedDIGI.fill = "#FFFFFF";
+    	}
+    	if(no1digi!==null){
+        	no1digi.fill = "#fbfbff";
+    	}
+        if(no2digi!==null){
+        	no2digi.fill = "#fdffff";
+    	}
+    	if(no3digi!==null){
+        	no3digi.fill = "#fffff4";
+    	}
+    	if(no4digi!==null){
+        	no4digi.fill = "#fbfffd";
+    	}
         if (stepCount < 3) {
             stepCount = 0;
             selectedDIGI = null;
@@ -309,7 +332,7 @@ Game.prototype = {
             no2digi = null;
             no3digi = null;
             no4digi = null;
-            supportLabel.text = 'At Least Need 3 Numbers';
+            supportLabel.text = 'Needs 3-5 Numbers';
             return;
         }
         this.KillDigital();
@@ -398,7 +421,6 @@ Game.prototype = {
     },
 
     KillDigital: function(){
-
         if ((this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi)+this.getDigiText(no3digi)+this.getDigiText(no4digi)) % (gameOptions.targetNumber? 5 :　3)===0) {
             score += this.getDigiText(selectedDIGI) + this.getDigiText(no1digi) + this.getDigiText(no2digi) + this.getDigiText(no3digi) + this.getDigiText(no4digi);
             scoreText.text = score;
@@ -417,6 +439,8 @@ Game.prototype = {
             if (no4digi !== null) {
                 no4digi.kill();
             }
+
+
             selectedDIGI = null;
             no1digi = null;
             no2digi = null;
@@ -435,8 +459,9 @@ Game.prototype = {
         if (allowInput)
         {
             stepCount=1;
-            console.log(stepCount);
+            //console.log(stepCount);
             selectedDIGI = digi;
+            selectedDIGI.fill = "#f9f901";
             supportLabel.text=digi.text+'='+digi.text;
         }
     },
@@ -547,7 +572,7 @@ Game.prototype = {
                     digi.reset(i * SIZE_SPACED, -digisMissingFromCol * SIZE_SPACED);
                     digi.dirty = true;
                     digi.text = this.randomizeDigiNumber(digi);
-                    console.log(digi.text);
+                    //console.log(digi.text);
                     this.setDigiPos(digi, i, j);
                     this.tweenDigiPos(digi, digi.posX, digi.posY, digisMissingFromCol * 2);
                 }
