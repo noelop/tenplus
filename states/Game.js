@@ -58,12 +58,12 @@ Game.prototype = {
         this.addTextOption('R', w - 400, 65, function (e) {
             this.game.state.start("Game");
         });
-        this.addTextOption('O', w - 100, 65, function (e) {
+        //this.addTextOption('O', w - 100, 65, function (e) {
         	//this.gameOver();
         	//console.log('game:',score)
-        	GameOver.Score=score;
-            this.game.state.start("GameOver");
-        });
+        //	GameOver.Score=score;
+        //    this.game.state.start("GameOver");
+        //});
         this.addTextOption('P', w - 300, 65, function (e) {
             this.onPaused();
         });
@@ -404,7 +404,8 @@ Game.prototype = {
             scoreText.text = score;
             winFactorCount -= 1;
             winFactorText.text = winFactorCount;
-            if(winFactorCount===10){
+            if(winFactorCount===0){
+            	GameOver.Score=score;
                 this.game.state.start("GameOver");
             }
             selectedDIGI.kill();
@@ -434,8 +435,8 @@ Game.prototype = {
         if (allowInput)
         {
             stepCount=1;
-            console.log(stepCount);
             selectedDIGI = digi;
+            this.onOver_f(selectedDIGI.);
             supportLabel.text=digi.text+'='+digi.text;
         }
     },
