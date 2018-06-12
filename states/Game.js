@@ -435,8 +435,8 @@ Game.prototype = {
         if (allowInput)
         {
             stepCount=1;
+            console.log(stepCount);
             selectedDIGI = digi;
-            this.onOver_f(selectedDIGI.);
             supportLabel.text=digi.text+'='+digi.text;
         }
     },
