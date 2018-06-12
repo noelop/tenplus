@@ -9,6 +9,8 @@ GameMenu.prototype = {
     },
 
     init: function () {
+        gameOptions.playSound = true;
+        gameOptions.playMusic = true;
         this.titleText = game.make.text(game.world.centerX, 100, "Game Title", {
             font: 'bold 60pt TheMinion',
             fill: '#FDFFB5',
@@ -54,11 +56,12 @@ GameMenu.prototype = {
             target.text = digitRange ? 'R:ten' : 'R:five';
             gameOptions.digitRange = digitRange;
         });
-        this.addMenuOption(winFactor ? 'F:step' : 'F:time', function (target) {
-            winFactor = !winFactor;
-            target.text = winFactor ? 'F:step' : 'F:time';
-            gameOptions.winFactor = winFactor;
-        });
+        
+        //this.addMenuOption(winFactor ? 'F:step' : 'F:time', function (target) {
+        //    winFactor = !winFactor;
+        //    target.text = winFactor ? 'F:step' : 'F:time';
+        //    gameOptions.winFactor = winFactor;
+        //});
     }
 };
 

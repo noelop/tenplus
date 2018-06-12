@@ -20,6 +20,14 @@ Splash.prototype = {
         game.load.audio('bongo', 'assets/bgm/Bongo_Madness.mp3');
         game.load.audio('wishful', 'assets/bgm/Wishful_Thinking.mp3');
         game.load.audio('francis', 'assets/bgm/St_Francis.mp3');
+        game.load.audio('piano_1', 'assets/bgm/piano_1.mp3');
+        game.load.audio('piano_2', 'assets/bgm/piano_2.mp3');
+        game.load.audio('piano_3', 'assets/bgm/piano_3.mp3');
+        game.load.audio('piano_4', 'assets/bgm/piano_4.mp3');
+        game.load.audio('piano_5', 'assets/bgm/piano_5.mp3');
+        game.load.audio('drum', 'assets/bgm/drum.mp3');
+        game.load.audio('din', 'assets/bgm/din.mp3');
+
     },
     // varios freebies found from google image search
     loadImages: function () {
@@ -72,6 +80,13 @@ Splash.prototype = {
     },
 
     addGameMusic: function () {
+        music_din = game.add.audio('din');
+        music_drum = game.add.audio('drum');
+    	music_piano_1 = game.add.audio('piano_1');
+    	music_piano_2 = game.add.audio('piano_2');
+        music_piano_3 = game.add.audio('piano_3');
+        music_piano_4 = game.add.audio('piano_4');
+        music_piano_5 = game.add.audio('piano_5');
         music_wishful = game.add.audio('wishful');
         music_bongo = game.add.audio('bongo');
         music_francis = game.add.audio('francis');

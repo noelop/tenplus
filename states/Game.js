@@ -70,10 +70,18 @@ Game.prototype = {
         game.input.onDown.add(this.unPause, self);
 
         this.addTextOption('Q', w - 200, 65, function (e) {
-            music_wishful.stop();
-            music_bongo.stop();
-
-            gameOptions.playMusic = false;
+        	if (gameOptions.playMusic === false){
+            	music_wishful.stop();
+            	music_bongo.play();
+            	gameOptions.playMusic = true;
+            	gameOptions.playSound = true;
+            }
+            else{
+            	music_bongo.stop();
+            	gameOptions.playMusic = false;
+            	gameOptions.playSound = false;
+            }
+        
         });
 
         this.addTextOption(gameOptions.targetNumber? 5+'x' : 3+'x' , w / 2, 210, null, 80, 'Impact');
@@ -184,6 +192,9 @@ Game.prototype = {
         }
         else{
             no1digi=this.getDigi(x,y);
+            if (gameOptions.playSound !== false){
+            	music_piano_2.play();
+            }
             no1digi.fill = "#f9f900";
             supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi));
             stepCount=2;
@@ -196,6 +207,9 @@ Game.prototype = {
         }
         else{
             no2digi=this.getDigi(x,y);
+            if (gameOptions.playSound !== false){
+            	music_piano_3.play();
+            }
             no2digi.fill = "#f9f902";
             supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'+'+this.getDigiText(no2digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi));
             stepCount=3;
@@ -208,6 +222,9 @@ Game.prototype = {
         }
         else{
             no3digi=this.getDigi(x,y);
+            if (gameOptions.playSound !== false){
+            	music_piano_4.play();
+            }
             no3digi.fill = "#f9f903";
             supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'+'+this.getDigiText(no2digi)+'+'+this.getDigiText(no3digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi)+this.getDigiText(no3digi));
             stepCount=4;
@@ -220,6 +237,9 @@ Game.prototype = {
         }
         else{
             no4digi=this.getDigi(x,y);
+            if (gameOptions.playSound !== false){
+            	music_piano_5.play();
+            }
             no4digi.fill = "#f9f904";
             supportLabel.text = this.getDigiText(selectedDIGI)+'+'+this.getDigiText(no1digi)+'+'+this.getDigiText(no2digi)+'+'+this.getDigiText(no3digi)+'+'+this.getDigiText(no4digi)+'='+(this.getDigiText(selectedDIGI)+this.getDigiText(no1digi)+this.getDigiText(no2digi)+this.getDigiText(no3digi)+this.getDigiText(no4digi));
             stepCount=5;
@@ -326,6 +346,9 @@ Game.prototype = {
         	no4digi.fill = "#fbfffd";
     	}
         if (stepCount < 3) {
+        	if (gameOptions.playSound !== false){
+        		music_drum.play();
+        	}
             stepCount = 0;
             selectedDIGI = null;
             no1digi = null;
@@ -447,9 +470,15 @@ Game.prototype = {
             no3digi = null;
             no4digi = null;
             stepCount = 0;
+            if (gameOptions.playSound !== false){
+            	music_din.play();
+        	}
         }
         else {
             supportLabel.text = 'Not A Target Multiple!!';
+            if (gameOptions.playSound !== false){
+            	music_drum.play();
+            }
         }
     },
 
@@ -460,6 +489,9 @@ Game.prototype = {
         {
             stepCount=1;
             //console.log(stepCount);
+            if (gameOptions.playSound !== false){
+            	music_piano_1.play();
+            }
             selectedDIGI = digi;
             selectedDIGI.fill = "#f9f901";
             supportLabel.text=digi.text+'='+digi.text;
