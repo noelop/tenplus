@@ -30,9 +30,6 @@ Options.prototype = {
             target.text = playMusic ? 'Mute Music' : 'Play Music';
             gameOptions.playMusic = !!playMusic;
             // musicPlayer.volume = playMusic ? 1 : 0;
-            if (gameOptions.playMusic === true) {
-                music_bongo.play();
-            }
             if (gameOptions.playMusic === false) {
                 music_wishful.stop();
                 music_bongo.stop();

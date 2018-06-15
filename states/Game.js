@@ -47,6 +47,7 @@ Game.prototype = {
         if (gameOptions.music_curren !== "bongo" && gameOptions.playMusic !== false) {
             music_wishful.stop();
             gameOptions.music_curren = music_bongo.name;
+            music_bongo.volume = 0.5;
             music_bongo.play();
         }
         this.stage.disableVisibilityChange = false;
@@ -72,6 +73,7 @@ Game.prototype = {
         this.addTextOption('Q', w - 200, 65, function (e) {
         	if (gameOptions.playMusic === false){
             	music_wishful.stop();
+            	music_bongo.volume = 0.5;
             	music_bongo.play();
             	gameOptions.playMusic = true;
             	gameOptions.playSound = true;
@@ -104,6 +106,11 @@ Game.prototype = {
 
     },
 
+    update: function(){
+        console.log("game music/sound = "+gameOptions.playMusic+"/"+gameOptions.playSound);
+
+    },
+
     spawnBoard: function () {
 
         digitals = this.game.add.group();
@@ -125,24 +132,6 @@ Game.prototype = {
         }
 
     },
-
-    onOver_f: function (target) {
-    	console.log(target.text);
-        if (target !== null) {
-            target.fill = "#f9f900";
-            //target.stroke = "rgba(200,200,200,0.5)";
-            // target.useHandCursor = true;
-
-        }
-        return target;
-    },
-
-    onOut_f: function (target) {
-        target.fill = "white";
-        //target.stroke = "rgba(0,0,0,0)";
-        // target.useHandCursor = false;
-    },
-
 
     getDigiText: function(digi){
 
@@ -372,8 +361,6 @@ Game.prototype = {
 
         // allowInput = false;
     },
-
-
 
     dropDigis: function() {
 

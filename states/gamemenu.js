@@ -9,9 +9,7 @@ GameMenu.prototype = {
     },
 
     init: function () {
-        gameOptions.playSound = true;
-        gameOptions.playMusic = true;
-        this.titleText = game.make.text(game.world.centerX, 100, "Game Title", {
+        this.titleText = game.make.text(game.world.centerX, 100, "Numeral!", {
             font: 'bold 60pt TheMinion',
             fill: '#FDFFB5',
             align: 'center'
@@ -19,11 +17,12 @@ GameMenu.prototype = {
         this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
         this.titleText.anchor.set(0.5);
         this.optionCount = 1;
+        console.log("gamemenu music = "+gameOptions.playMusic);
     },
 
     create: function () {
 
-        if (gameOptions.music_curren !== "wishful" && gameOptions.playMusic !== false) {
+        if (gameOptions.playMusic !== false) {
             console.log('menu play');
             music_bongo.stop();
             gameOptions.music_curren = music_wishful.name;

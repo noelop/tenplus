@@ -11,8 +11,8 @@ Credits.prototype = {
   addCredit: function(task, author) {
     var authorStyle = { font: '40pt TheMinion', fill: 'white', align: 'center', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
     var taskStyle = { font: '30pt TheMinion', fill: 'white', align: 'center', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
-    var authorText = game.add.text(game.world.centerX, 900, author, authorStyle);
-    var taskText = game.add.text(game.world.centerX, 950, task, taskStyle);
+    var authorText = game.add.text(game.world.centerX, 1000, author, authorStyle);
+    var taskText = game.add.text(game.world.centerX, 1050, task, taskStyle);
     authorText.anchor.setTo(0.5);
     authorText.stroke = "rgba(0,0,0,0)";
     authorText.strokeThickness = 4;
@@ -51,16 +51,14 @@ Credits.prototype = {
 
   create: function () {
     this.stage.disableVisibilityChange = true;
-    if (gameOptions.playMusic) {
-      musicPlayer.stop();
-      musicPlayer = game.add.audio('exit');
-      musicPlayer.play();
-    }
+    // if (gameOptions.playMusic) {
+    //   musicPlayer.stop();
+    //   musicPlayer = game.add.audio('exit');
+    //   musicPlayer.play();
+    // }
     var bg = game.add.sprite(0, 0, 'gameover-bg');
-    this.addCredit('Music', 'Kevin Macleod');
-    this.addCredit('Developer', 'Matt McFarland');
-    this.addCredit('Lorem Ipsum', 'Mipsem Dempsum');
-    this.addCredit('Caveats', 'Keyboard Cat');
+    this.addCredit('Developer', 'Noelop');
+    this.addCredit('Developer', 'Blue');
     this.addCredit('Phaser.io', 'Powered By');
     this.addCredit('for playing', 'Thank you');
     this.addMenuOption('<- Back', function (e) {
