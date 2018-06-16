@@ -38,7 +38,7 @@ Game.prototype = {
 
     init: function () {
         score = 0;
-        winFactorCount = 5;
+        winFactorCount = 10;
 
         this.game.add.sprite(0, 0, 'Game_bg');
         this.game.add.sprite(0, 20, 'green-bar');
