@@ -25,9 +25,9 @@ Options.prototype = {
 
         game.add.sprite(0, 0, 'options-bg');
         game.add.existing(this.titleText);
-        this.addMenuOption(playMusic ? 'Mute Music' : 'Play Music', function (target) {
+        this.addMenuOption(playMusic ? 'Mute Bg Music' : 'Play Bg Music', function (target) {
             playMusic = !playMusic;
-            target.text = playMusic ? 'Mute Music' : 'Play Music';
+            target.text = playMusic ? 'Mute Bg Music' : 'Play Bg Music';
             gameOptions.playMusic = !!playMusic;
             // musicPlayer.volume = playMusic ? 1 : 0;
             if (gameOptions.playMusic === false) {
@@ -35,9 +35,9 @@ Options.prototype = {
                 music_bongo.stop();
             }
         });
-        this.addMenuOption(playSound ? 'Mute Sound' : 'Play Sound', function (target) {
+        this.addMenuOption(playSound ? 'Mute Ef Sound' : 'Play Ef Sound', function (target) {
             playSound = !playSound;
-            target.text = playSound ? 'Mute Sound' : 'Play Sound';
+            target.text = playSound ? 'Mute Ef Sound' : 'Play Ef Sound';
             gameOptions.playSound = !!playSound;
         });
         this.addMenuOption('<- Back', function () {

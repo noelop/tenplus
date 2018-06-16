@@ -7,7 +7,8 @@ var game = new Phaser.Game(540, 960, Phaser.AUTO, 'game'),
         music_current: null,
         targetNumber: true,
         digitRange: true,
-        winFactor: true
+        winFactor: true,
+        leaderBoard: [0, 0, 0]
     },
     musicPlayer;
 

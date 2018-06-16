@@ -17,20 +17,33 @@ GameMenu.prototype = {
         this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
         this.titleText.anchor.set(0.5);
         this.optionCount = 1;
+
+        this.targetMul = game.make.text(285, 330, "Target Mul", {
+            font: 'bold 25pt TheMinion',
+            fill: '#ffffff',
+        });
+        this.numRange = game.make.text(285, 450, "Num Range", {
+            font: 'bold 25pt TheMinion',
+            fill: '#ffffff',
+        });
         console.log("gamemenu music = "+gameOptions.playMusic);
     },
 
     create: function () {
 
         if (gameOptions.playMusic !== false) {
-            console.log('menu play');
-            music_bongo.stop();
-            gameOptions.music_curren = music_wishful.name;
-            music_wishful.play();
+            if (gameOptions.music_current !== "wishful") {
+                console.log('menu play');
+                music_bongo.stop();
+                gameOptions.music_current = music_wishful.name;
+                music_wishful.play();
+            }
         }
         game.stage.disableVisibilityChange = true;
         game.add.sprite(0, 0, 'menu-bg');
         game.add.existing(this.titleText);
+        game.add.existing(this.targetMul);
+        game.add.existing(this.numRange);
 
         this.addMenuOption('Start', function () {
             game.state.start("Game");
@@ -45,14 +58,14 @@ GameMenu.prototype = {
         var targetNumber = gameOptions.targetNumber,
             digitRange = gameOptions.digitRange,
             winFactor = gameOptions.winFactor;
-        this.addMenuOption(targetNumber ? 'T:five' : 'T:three', function (target) {
+        this.addMenuOption(targetNumber ? 'five' : 'three', function (target) {
             targetNumber = !targetNumber;
-            target.text = targetNumber ? 'T:five' : 'T:three';
+            target.text = targetNumber ? 'five' : 'three';
             gameOptions.targetNumber = targetNumber;
         });
-        this.addMenuOption(digitRange ? 'R:ten' : 'R:five', function (target) {
+        this.addMenuOption(digitRange ? 'ten' : 'five', function (target) {
             digitRange = !digitRange;
-            target.text = digitRange ? 'R:ten' : 'R:five';
+            target.text = digitRange ? 'ten' : 'five';
             gameOptions.digitRange = digitRange;
         });
         

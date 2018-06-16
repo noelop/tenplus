@@ -35,7 +35,7 @@ Splash.prototype = {
         game.load.image('menu-bg', 'assets/images/menu-bg.png');
         game.load.image('gameover-bg', 'assets/images/gameover-bg.png');
         game.load.image('green-bar', 'assets/images/green.png');
-        game.load.image("paused-board", 'assets/images/number-buttons-90x90.png');
+        game.load.image("paused-board", 'assets/images/pause.png');
         game.load.image("Game_bg", 'assets/images/inGame_bg.png');
 
     },

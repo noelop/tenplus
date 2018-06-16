@@ -31,7 +31,6 @@ var Game = function(game) {
     scoreText = 0;
     DigiXAlter = 30;
     DigiYAlter = 400;
-    winFactorCount = 10;
     winFactorText = 0;
 };
 
@@ -39,16 +38,19 @@ Game.prototype = {
 
     init: function () {
         score = 0;
-        winFactorCount = 10;
+        winFactorCount = 5;
 
         this.game.add.sprite(0, 0, 'Game_bg');
         this.game.add.sprite(0, 20, 'green-bar');
 
-        if (gameOptions.music_curren !== "bongo" && gameOptions.playMusic !== false) {
-            music_wishful.stop();
-            gameOptions.music_curren = music_bongo.name;
-            music_bongo.volume = 0.5;
-            music_bongo.play();
+        if (gameOptions.playMusic !== false) {
+            if (gameOptions.music_current !== "bongo") {
+                music_wishful.stop();
+                gameOptions.music_curren = music_bongo.name;
+                music_bongo.volume = 0.5;
+                music_bongo.play();
+                gameOptions.music_current = "bongo"
+            }
         }
         this.stage.disableVisibilityChange = false;
 
@@ -59,18 +61,10 @@ Game.prototype = {
         this.addTextOption('R', w - 400, 65, function (e) {
             this.game.state.start("Game");
         });
-        //this.addTextOption('O', w - 100, 65, function (e) {
-        	//this.gameOver();
-        	//console.log('game:',score)
-        //	GameOver.Score=score;
-        //    this.game.state.start("GameOver");
-        //});
-        this.addTextOption('P', w - 300, 65, function (e) {
-            this.onPaused();
-        });
+
         game.input.onDown.add(this.unPause, self);
 
-        this.addTextOption('Q', w - 200, 65, function (e) {
+        this.addTextOption('Q', w - 300, 65, function (e) {
         	if (gameOptions.playMusic === false){
             	music_wishful.stop();
             	music_bongo.volume = 0.5;
@@ -84,6 +78,10 @@ Game.prototype = {
             	gameOptions.playSound = false;
             }
         
+        });
+
+        this.addTextOption('P', w - 200, 65, function (e) {
+            this.onPaused();
         });
 
         this.addTextOption(gameOptions.targetNumber? 5+'x' : 3+'x' , w / 2, 210, null, 80, 'Impact');
@@ -437,7 +435,8 @@ Game.prototype = {
             winFactorCount -= 1;
             winFactorText.text = winFactorCount;
             if(winFactorCount===0){
-            	GameOver.Score=score;
+                GameOver.Score=score;
+            	gameOptions.leaderBoard.push(score);
                 this.game.state.start("GameOver");
             }
             selectedDIGI.kill();
@@ -497,7 +496,7 @@ Game.prototype = {
         menu_board.anchor.setTo(0.5, 0.5);
 
         // And a label to illustrate which menu item was chosen. (This is not necessary)
-        choiseLabel = this.game.add.text(w / 2, h / 2 + 150, 'Click outside menu to continue', {
+        choiseLabel = this.game.add.text(w / 2, h / 2 + 135, 'Click outside menu to continue', {
             font: '30px Arial',
             fill: 'white'
         });
@@ -513,18 +512,18 @@ Game.prototype = {
 
             // Check if the click was inside the menu
             if (event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2) {
-                // The choicemap is an array that will help us see which item was clicked
-                var choisemap = ['one', 'two', 'three', 'four', 'five', 'six'];
-
-                // Get menu local coordinates for the click
-                var x = event.x - x1,
-                    y = event.y - y1;
-
-                // Calculate the choice
-                var choise = Math.floor(x / 90) + 3 * Math.floor(y / 90);
-
-                // Display the choice
-                this.choiseLabel.text = 'You chose menu item: ' + choisemap[choise];
+                // // The choicemap is an array that will help us see which item was clicked
+                // var choisemap = ['one', 'two', 'three', 'four', 'five', 'six'];
+                //
+                // // Get menu local coordinates for the click
+                // var x = event.x - x1,
+                //     y = event.y - y1;
+                //
+                // // Calculate the choice
+                // var choise = Math.floor(x / 90) + 3 * Math.floor(y / 90);
+                //
+                // // Display the choice
+                // this.choiseLabel.text = 'You chose menu item: ' + choisemap[choise];
             }
             else {
                 // Remove the menu and the label
